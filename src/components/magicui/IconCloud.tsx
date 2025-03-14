@@ -26,8 +26,11 @@ const createCloudProps = (
       justifyContent: "center",
       alignItems: "center",
       width: width,
+      maxWidth: "100%",
       height: height,
-      paddingTop: 40,
+      margin: "0 auto",
+      padding: "20px",
+      overflow: "hidden",
     },
   },
   options: {

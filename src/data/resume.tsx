@@ -78,6 +78,18 @@ export const DATA = {
 
   work: [
     {
+      company: "Drello",
+      href: "https://aiblogfe.vercel.app/",
+      badges: [],
+      location: "Remote",
+      title: "Web3 Frontend Engineer",
+      logoUrl: "/drelloLogo.jpeg",
+      start: "OCT 2024",
+      end: "Present",
+      description:
+        "Built a Web3 jobs marketplace (Drello) using Next.js, TypeScript, and Tailwind CSS for the frontend interface. Developed blockchain authentication system with Base Network, enabling secure wallet-based user access. Built and deployed smart contracts using Solidity and Hardhat for job posting and payment functionalities. Integrated Web3 features using Wagmi and Viem for frontend-blockchain communication. Created responsive UI components and screens for seamless user experience. Implemented full integration between smart contracts and frontend for real-time transaction processing",
+    },
+    {
       company: "HNG Tech",
       href: "https://hng.tech/internship",
       badges: [],
@@ -108,19 +120,44 @@ export const DATA = {
       href: "https://unilag.edu.ng",
       degree: "Bachelor's Degree of Computer Science (BSc.)",
       logoUrl: "/unilag.svg",
-      start: "2018",
-      end: "2023",
-    },
-    {
-      school: "ALX Software Engineering",
-      href: "https://www.alxafrica.com/programme/back-end-web-development/",
-      degree: "Software Engineering (Backend)",
-      logoUrl: "/alx.jpeg",
-      start: "JUL 2024",
-      end: "Present",
+      start: "",
+      end: "",
     },
   ],
   projects: [
+    {
+      title: "Noisr",
+      href: "https://noisr-iota.vercel.app",
+      dates: "MAR 2025 - Present",
+      active: true,
+      description:
+        " This project is a Next.js application that enables users to report noise levels in their area and visualize these reports on an interactive map. It aims to create a platform for crowdsourced noise level reporting in urban areas, potentially aiding urban planning and community noise management.",
+      technologies: [
+        "Next.js",
+        "Typescript",
+        "Zod",
+        "TailwindCSS",
+        "react-leaflet",
+        "Prisma",
+        "Data structures and Algorithms",
+        "Open Source Maps",
+      ],
+      links: [
+        {
+          type: "Website",
+          href: "https://noisr-iota.vercel.app",
+          icon: <Icons.globe className="size-3" />,
+        },
+        {
+          type: "Source",
+          href: "https://github.com/AdekolaToniloba/noise-mapper",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image:
+        "https://i.ibb.co/dwybCRnC/Screenshot-2025-03-14-at-4-00-29-PM.png",
+      video: "",
+    },
     {
       title: "Remote Bingo",
       href: "https://remote.bingo",

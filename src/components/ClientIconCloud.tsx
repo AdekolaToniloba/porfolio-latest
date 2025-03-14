@@ -12,8 +12,8 @@ interface ClientIconCloudProps {
 
 export default function ClientIconCloud({
   iconSlugs,
-  width,
-  height,
+  width = "100%",
+  height = "auto",
 }: ClientIconCloudProps) {
   return <IconCloud iconSlugs={iconSlugs} width={width} height={height} />;
 }
