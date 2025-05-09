@@ -77,6 +77,18 @@ export const DATA = {
   },
 
   work: [
+      {
+      company: "Nithub",
+      href: "https://nithub.unilag.edu.ng/",
+      badges: [],
+      location: "Lagos, Nigeria",
+      title: "Frontend Engineer",
+      logoUrl: "/Nithub.png",
+      start: "FEB 2025",
+      end: "Present",
+      description:
+        "Led frontend development of the Nithub website using React, ensuring responsiveness across devices.Authored comprehensive tests with Vitest to maintain code quality and reliability. Served as technical lead on two engineering initiatives, coordinating agile teams of engineers, designers, and mobile developers.",
+    },
     {
       company: "Drello",
       href: "https://aiblogfe.vercel.app/",
@@ -125,6 +137,34 @@ export const DATA = {
     },
   ],
   projects: [
+     {
+      title: "Nithub Website",
+      href: "https://nithub.unilag.edu.ng",
+      dates: "FEB 2025 - Present",
+      active: true,
+      description:
+        "This is a fully responsive React application styled with Tailwind CSS and enhanced with Framer Motion, Swiper carousels, and Lucide React icons. I powered dynamic content pages using react‑markdown and remark‑gfm, and optimized image delivery through Cloudinary. Comprehensive Vitest test suites ensured code quality and reliability throughout development.",
+      technologies: [
+        "React",
+        "Lucide React",
+        "Swiper",
+        "TailwindCSS",
+        "react-markdown",
+        "remark-gfm",
+        "framer-motion",
+        "cloudinary",
+      ],
+      links: [
+        {
+          type: "Website",
+          href: "https://nithub.unilag.edu.ng/",
+          icon: <Icons.globe className="size-3" />,
+        },
+      ],
+      image:
+        "https://i.ibb.co/Kz9v6msg/nithub-web.png",
+      video: "",
+    },
     {
       title: "Noisr",
       href: "https://noisr-iota.vercel.app",
