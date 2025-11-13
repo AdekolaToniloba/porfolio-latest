@@ -166,8 +166,41 @@ export const DATA = {
       video: "",
     },
     {
-      title: "Noisr",
-      href: "https://noisr-iota.vercel.app",
+      title: "ICAIR Companion App",
+      href: "",
+      dates: "OCT 2025 - NOV 2025",
+      active: true,
+      description:
+        "A beautiful, feature-rich Progressive Web App (PWA) for the ICAIR Conference 2025, built with React, Next.js, TypeScript, Tailwind CSS, and Framer Motion. Designed mobile-first with smooth animations, offline capabilities, and comprehensive state management.",
+      technologies: [
+        "Next js",
+        "Lucide React",
+        "Typescript",
+        "TailwindCSS",
+        "PWA",
+        "Shad-cn",
+        "framer-motion",
+        "Zustand",
+      ],
+      links: [
+        {
+          type: "Website",
+          href: "https://icair-companion.vercel.app",
+          icon: <Icons.globe className="size-3" />,
+        },
+        {
+          type: "Source",
+          href: "https://github.com/AdekolaToniloba/icair-pwa",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image:
+        "https://ibb.co/XfNNTwM0",
+      video: "",
+    },
+    {
+      title: "Noise Map",
+      href: "https://noisemap.vercel.app/",
       dates: "MAR 2025 - Present",
       active: true,
       description:
@@ -185,7 +218,7 @@ export const DATA = {
       links: [
         {
           type: "Website",
-          href: "https://noisr-iota.vercel.app",
+          href: "https://noisemap.vercel.app/",
           icon: <Icons.globe className="size-3" />,
         },
         {
