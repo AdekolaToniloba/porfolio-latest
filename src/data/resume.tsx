@@ -195,8 +195,8 @@ export const DATA = {
         },
       ],
       image:
-        "https://ibb.co/XfNNTwM0",
-      video: "",
+        "https://i.ibb.co/xKPPQ4d9/Screenshot-2025-11-13-at-12-43-27.png",
+      video: "https://player.cloudinary.com/embed/?cloud_name=dcsbiy8cf&public_id=Screen_Recording_2025-11-13_at_13.06.42_wa6yt5&profile=cld-default",
     },
     {
       title: "Noise Map",
