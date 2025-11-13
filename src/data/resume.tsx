@@ -167,7 +167,7 @@ export const DATA = {
     },
     {
       title: "ICAIR Companion App",
-      href: "",
+      href: "https://icair-companion.vercel.app",
       dates: "OCT 2025 - NOV 2025",
       active: true,
       description:
