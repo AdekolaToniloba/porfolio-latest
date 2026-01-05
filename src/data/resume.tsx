@@ -171,7 +171,7 @@ export const DATA = {
       dates: "NOV 2025 - Present",
       active: true,
       description:
-        " Contributed to a responsive remote bingo game for friends to enjoy online, featuring real-time interaction and seamless user management. The game enhances social connectivity by offering a fun, easy-to-use platform with smooth user authentication and customizable game features.",
+        "Aether creates a seamless bridge between local Jupyter Notebooks and production-ready APIs. I developed the frontend for this cloud-native platform, enabling data scientists to deploy machine learning models with a single click—removing the need for complex Docker or Kubernetes knowledge. Integrated secure WebSockets to stream live build logs and deployment status, giving users immediate feedback during the CI/CD process. Moved away from standard enterprise dashboards by implementing a striking "brutalist" aesthetic that prioritizes clarity and speed.",
       technologies: [
         "Next.js",
         "Typescript",
