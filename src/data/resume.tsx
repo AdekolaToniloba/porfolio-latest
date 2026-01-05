@@ -165,6 +165,39 @@ export const DATA = {
         "https://i.ibb.co/Kz9v6msg/nithub-web.png",
       video: "",
     },
+        {
+      title: "AETHER",
+      href: "https://aether-860155021919.us-central1.run.app/",
+      dates: "NOV 2025 - Present",
+      active: true,
+      description:
+        " Contributed to a responsive remote bingo game for friends to enjoy online, featuring real-time interaction and seamless user management. The game enhances social connectivity by offering a fun, easy-to-use platform with smooth user authentication and customizable game features.",
+      technologies: [
+        "Next.js",
+        "Typescript",
+        "Nest.js",
+        "Zod",
+        "TailwindCSS",
+        "Framer",
+        "Shadcn UI",
+        "JWT-Decode",
+        "Zustand",
+      ],
+      links: [
+        {
+          type: "Website",
+          href: "https://aether-860155021919.us-central1.run.app/,
+          icon: <Icons.globe className="size-3" />,
+        },
+        {
+          type: "Source",
+          href: "https://github.com/AdekolaToniloba/notebook-deployer-fe",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "https://i.ibb.co/1JmSgwmZ/Screenshot-2025-12-31-at-19-41-54.png",
+      video: "",
+    },
     {
       title: "ICAIR Companion App",
       href: "https://icair-companion.vercel.app",
@@ -232,35 +265,6 @@ export const DATA = {
       video: "",
     },
     {
-      title: "Remote Bingo",
-      href: "https://remote.bingo",
-      dates: "Jul 2024 - Present",
-      active: true,
-      description:
-        " Contributed to a responsive remote bingo game for friends to enjoy online, featuring real-time interaction and seamless user management. The game enhances social connectivity by offering a fun, easy-to-use platform with smooth user authentication and customizable game features.",
-      technologies: [
-        "Next.js",
-        "Typescript",
-        "Nest.js",
-        "Zod",
-        "TailwindCSS",
-        "Stripe",
-        "Shadcn UI",
-        "Centrifugo",
-        "Gsap",
-        "Zustand",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://remote.bingo",
-          icon: <Icons.globe className="size-3" />,
-        },
-      ],
-      image: "https://i.ibb.co/hgKrxVd/Screenshot-2024-09-03-at-2-23-19-PM.png",
-      video: "",
-    },
-    {
       title: "DEV LINKS",
       href: "https://dev-links-blush.vercel.app",
       dates: "July 2024",
@@ -287,7 +291,7 @@ export const DATA = {
       title: "HNG BoilerPlate",
       href: "https://starlight-nestjs.teams.hng.tech",
       dates: "July 2024 - August 2024",
-      active: true,
+      active: false,
       description:
         "Contributed to building a scalable and maintainable React boilerplate that serves as a comprehensive starter kit for developers. This boilerplate includes essential features like user authentication, messaging, and user management, streamlining development by reducing repetitive tasks and ensuring consistency.",
       technologies: [
