@@ -1,77 +1,35 @@
 import PortfolioRedesign, { type Post } from "@/components/portfolio-redesign";
 
-const fallbackPosts: Post[] = [
+const writingPosts: Post[] = [
   {
-    title: "Building products with taste and restraint",
+    title: "From Frontend to Full Stack: A Developer's Journey into Backend Territory",
     brief:
-      "Notes on frontend decisions, product context, and the tiny details that make interfaces feel trustworthy.",
-    publishedAt: "2026-01-12T00:00:00.000Z",
+      "As a front-end developer, I've always been comfortable crafting user interfaces and bringing designs to life in the browser. However, I recently decided to venture into the world of backend development, and boy, was it an eye-opening experience!",
+    publishedAt: "2024-07-06T00:00:00.000Z",
     readTimeInMinutes: 4,
-    url: "https://theadekolaexperience.hashnode.dev",
+    url: "https://theadekolaexperience.hashnode.dev/from-frontend-to-full-stack-a-developers-journey-into-backend-territory",
+    tags: [{ name: "Full Stack" }],
+  },
+  {
+    title: "Svelte Vs React: Which is best for your project?",
+    brief:
+      "Javascript is the language of the web. Its frameworks have completely changed how developers approach web development, equipping them with powerful ways to build modern interfaces.",
+    publishedAt: "2024-07-05T00:00:00.000Z",
+    readTimeInMinutes: 7,
+    url: "https://theadekolaexperience.hashnode.dev/svelte-vs-react-which-is-best-for-your-project",
     tags: [{ name: "Frontend" }],
   },
   {
-    title: "What Lagos teaches you about software",
+    title: "The Future of Frontend Development",
     brief:
-      "A practical look at building for real users, real constraints, and products that cannot afford to be fragile.",
-    publishedAt: "2025-11-19T00:00:00.000Z",
-    readTimeInMinutes: 5,
-    url: "https://theadekolaexperience.hashnode.dev",
-    tags: [{ name: "Product" }],
-  },
-  {
-    title: "From design decision to production component",
-    brief:
-      "How I move from visual direction to reusable pieces without losing the feeling that made the design work.",
-    publishedAt: "2025-09-08T00:00:00.000Z",
-    readTimeInMinutes: 3,
-    url: "https://theadekolaexperience.hashnode.dev",
-    tags: [{ name: "React" }],
+      "If you are new to the programming space, the term “Frontend Development” is one you might have heard often. This post explores where the field is heading and what developers should pay attention to.",
+    publishedAt: "2023-07-31T00:00:00.000Z",
+    readTimeInMinutes: 21,
+    url: "https://theadekolaexperience.hashnode.dev/the-future-of-frontend-development",
+    tags: [{ name: "Frontend" }],
   },
 ];
 
-async function getPosts(): Promise<Post[]> {
-  try {
-    const res = await fetch("https://gql.hashnode.com", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query: `
-          query {
-            publication(host: "theadekolaexperience.hashnode.dev") {
-              posts(first: 3) {
-                edges {
-                  node {
-                    title
-                    brief
-                    publishedAt
-                    readTimeInMinutes
-                    url
-                    tags { name }
-                  }
-                }
-              }
-            }
-          }
-        `,
-      }),
-      next: { revalidate: 3600 },
-    });
-
-    if (!res.ok) return fallbackPosts;
-    const data = await res.json();
-    return (
-      data?.data?.publication?.posts?.edges?.map(
-        (edge: { node: Post }) => edge.node
-      ) ?? fallbackPosts
-    );
-  } catch {
-    return fallbackPosts;
-  }
-}
-
-export default async function Page() {
-  const posts = await getPosts();
-
-  return <PortfolioRedesign posts={posts} />;
+export default function Page() {
+  return <PortfolioRedesign posts={writingPosts} />;
 }

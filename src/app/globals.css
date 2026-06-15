@@ -38,13 +38,13 @@ body {
 
 @media (pointer: fine) {
   body {
-    cursor: none;
+    cursor: crosshair;
   }
 }
 
 a,
 button {
-  cursor: inherit;
+  cursor: pointer;
 }
 
 *:focus-visible {

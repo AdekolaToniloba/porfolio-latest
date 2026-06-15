@@ -29,6 +29,7 @@ const projects = [
       "A luxury investment brand that needed to feel authoritative without feeling cold. Navy, gold, and a lot of restraint.",
     tags: ["Next.js 14", "Framer Motion", "Tailwind"],
     link: { label: "Live ↗", href: "https://erad-mu.vercel.app" },
+    image: "/assets/project-erad.png",
   },
   {
     year: "2025 — Present",
@@ -37,15 +38,20 @@ const projects = [
       "Insurance built from scratch for Nigerian gig workers. Auth flows, KYC, marketplace, risk scoring — the full product.",
     tags: ["Next.js", "Zustand", "TanStack Query", "Framer Motion"],
     link: { label: "Live ↗", href: "https://gigsecure.co" },
+    image: "/assets/project-gigsecure.png",
     flipped: true,
   },
   {
-    year: "2024 — Present",
-    name: "Drello",
+    year: "2025 — Present",
+    name: "Aether",
     description:
-      "A Web3 jobs marketplace on Base Network. Wallet auth, Solidity contracts, and the full frontend-to-blockchain integration.",
-    tags: ["Web3", "Wagmi", "Viem", "Solidity"],
-    link: { label: "Source ↗", href: "https://github.com/AdekolaToniloba" },
+      "A cloud-native platform that turns local Jupyter notebooks into production-ready APIs. One-click deploys, live build logs, and a deliberately sharp brutalist interface.",
+    tags: ["Next.js", "TypeScript", "Google Cloud Run", "WebSockets"],
+    link: {
+      label: "Live ↗",
+      href: "https://aether-860155021919.us-central1.run.app/",
+    },
+    image: "/assets/project-aether.png",
   },
   {
     year: "2025",
@@ -54,6 +60,7 @@ const projects = [
       "A website for a sickle cell NGO in Lagos. Real programs, donation flows, genotype testing, and a gallery of actual field work.",
     tags: ["Next.js", "Prisma", "Paystack", "Cloudinary"],
     link: { label: "Live ↗", href: "https://cksi.org" },
+    image: "/assets/project-cksi.png",
     flipped: true,
   },
 ];
@@ -148,9 +155,16 @@ function CornerBrackets({
 function MagneticCursor() {
   const prefersReduced = useReducedMotion();
   const [finePointer, setFinePointer] = useState(false);
-  const [cursor, setCursor] = useState({ x: -100, y: -100, scale: 1, label: "" });
+  const [follower, setFollower] = useState({
+    x: -100,
+    y: -100,
+    scale: 1,
+    label: "",
+  });
   const target = useRef({ x: -100, y: -100 });
   const current = useRef({ x: -100, y: -100 });
+  const pointer = useRef({ x: -100, y: -100 });
+  const magnet = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const media = window.matchMedia("(pointer: fine)");
@@ -164,46 +178,50 @@ function MagneticCursor() {
     if (!finePointer || prefersReduced) return;
 
     let frame = 0;
+    const getCursorLabel = (el: HTMLElement | null) => {
+      if (!el) return "";
+      if (el.dataset.cursorLabel) return el.dataset.cursorLabel;
+      if (el.classList.contains("project-card")) return "View →";
+      if (el.classList.contains("email-link")) return "Copy.";
+      if (el.getAttribute("aria-label")) return el.getAttribute("aria-label") ?? "";
+      return (el.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 16);
+    };
+    const getInteractive = (element: EventTarget | null) =>
+      element instanceof HTMLElement
+        ? element.closest<HTMLElement>("a,button,.project-card")
+        : null;
+    const syncMagnet = (el: HTMLElement | null) => {
+      magnet.current = el;
+    };
     const onMove = (event: MouseEvent) => {
-      target.current = { x: event.clientX, y: event.clientY };
+      pointer.current = { x: event.clientX, y: event.clientY };
+      const el = getInteractive(event.target);
+      if (el !== magnet.current) syncMagnet(el);
     };
-    const onOver = (event: MouseEvent) => {
-      const el = (event.target as HTMLElement).closest<HTMLElement>(
-        "a,button,.project-card"
-      );
-      if (!el) {
-        setCursor((value) => ({ ...value, scale: 1, label: "" }));
-        return;
-      }
-      const rect = el.getBoundingClientRect();
-      target.current = {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
-      };
-      const label = el.classList.contains("project-card")
-        ? "View →"
-        : el.classList.contains("email-link")
-          ? "Copy."
-          : "";
-      setCursor((value) => ({ ...value, scale: label ? 2.7 : 2.5, label }));
-    };
-    const onOut = () => setCursor((value) => ({ ...value, scale: 1, label: "" }));
     const tick = () => {
-      current.current.x += (target.current.x - current.current.x) * 0.12;
-      current.current.y += (target.current.y - current.current.y) * 0.12;
-      setCursor((value) => ({ ...value, x: current.current.x, y: current.current.y }));
+      const el = magnet.current;
+      const label = getCursorLabel(el);
+
+      target.current = pointer.current;
+
+      const speed = el ? 0.74 : 0.68;
+      current.current.x += (target.current.x - current.current.x) * speed;
+      current.current.y += (target.current.y - current.current.y) * speed;
+      setFollower((value) => ({
+        ...value,
+        x: current.current.x,
+        y: current.current.y,
+        scale: el ? 1.08 : 1,
+        label,
+      }));
       frame = requestAnimationFrame(tick);
     };
 
     window.addEventListener("mousemove", onMove);
-    document.addEventListener("mouseover", onOver);
-    document.addEventListener("mouseout", onOut);
     frame = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener("mousemove", onMove);
-      document.removeEventListener("mouseover", onOver);
-      document.removeEventListener("mouseout", onOut);
       cancelAnimationFrame(frame);
     };
   }, [finePointer, prefersReduced]);
@@ -213,16 +231,22 @@ function MagneticCursor() {
   return (
     <motion.div
       aria-hidden="true"
-      className="pointer-events-none fixed left-0 top-0 z-[90] flex h-4 w-4 items-center justify-center border-[1.5px] border-lime text-[4px] font-mono uppercase tracking-wide text-lime mix-blend-difference"
+      className="pointer-events-none fixed left-0 top-0 z-[90] flex h-5 w-5 items-center justify-center border border-lime bg-bg/40 font-mono uppercase tracking-wide text-lime shadow-[0_0_16px_rgba(200,241,53,0.25)]"
       animate={{
-        x: cursor.x - 8,
-        y: cursor.y - 8,
-        scale: cursor.scale,
-        borderRadius: cursor.label ? "999px" : "0px",
+        x: follower.x - 10,
+        y: follower.y - 10,
+        scale: follower.scale,
+        borderRadius: "0px",
       }}
-      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+      transition={{ type: "spring", stiffness: 900, damping: 42 }}
     >
-      {cursor.label}
+      {follower.label ? (
+        <span className="absolute left-1/2 top-1/2 flex h-8 min-w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center border border-lime bg-bg/90 px-2 text-[7px] shadow-[0_0_16px_rgba(200,241,53,0.35)]">
+          {follower.label}
+        </span>
+      ) : (
+        <span className="h-1 w-1 bg-lime" />
+      )}
     </motion.div>
   );
 }
@@ -263,7 +287,7 @@ function Navbar() {
   return (
     <nav
       aria-label="Main navigation"
-      className="sticky top-0 z-50 border-b border-[rgba(255,255,255,0.07)] bg-[rgba(12,12,12,0.92)] px-6 py-[18px] backdrop-blur-xl md:px-10 md:py-[22px]"
+      className="fixed inset-x-0 top-0 z-50 border-b border-[rgba(200,241,53,0.16)] bg-[rgba(12,12,12,0.98)] px-6 py-[18px] shadow-[0_10px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl md:px-10 md:py-[22px]"
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between">
         <Link href="#" className="glitch font-syne text-xl font-extrabold text-ink">
@@ -344,12 +368,17 @@ function Hero() {
       <span key={`${word}-${index}`} className="inline-block overflow-hidden">
         <motion.span
           className="inline-block"
-          initial={false}
-          animate={{ y: 0 }}
+          initial={prefersReduced ? false : { opacity: 0, y: 18, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={
             prefersReduced
               ? undefined
-              : { type: "spring", stiffness: 300, damping: 20, delay: offset + index * 0.055 }
+              : {
+                  type: "spring",
+                  stiffness: 360,
+                  damping: 24,
+                  delay: offset + index * 0.055,
+                }
           }
         >
           {letter}
@@ -380,7 +409,7 @@ function Hero() {
           <span className="block text-ink">{letters("TONI", 0.1)}</span>
           <span className="text-outline block">{letters("ADEKOLA", 0.4)}</span>
         </h1>
-        <p className="mt-8 max-w-[260px] font-mono text-xs text-[rgba(232,232,226,0.5)] md:max-w-[440px]">
+        <p className="mt-8 max-w-[300px] font-mono text-xs text-[rgba(232,232,226,0.5)] md:max-w-[520px]">
           {words.map((word, index) => (
             <motion.span
               key={`${word}-${index}`}
@@ -394,8 +423,7 @@ function Hero() {
           ))}
         </p>
         <motion.p
-          className="mt-5 max-w-[380px] font-mono text-xs leading-[1.85] text-[rgba(232,232,226,0.5)]"
-          className="mt-5 max-w-[270px] font-mono text-xs leading-[1.85] text-[rgba(232,232,226,0.5)] md:max-w-[380px]"
+          className="mt-5 max-w-[315px] font-mono text-xs leading-[1.85] text-[rgba(232,232,226,0.5)] md:max-w-[500px]"
           initial={false}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.65 }}
@@ -414,12 +442,14 @@ function Hero() {
         >
           <Link
             href="#work"
+            data-cursor-label="Work →"
             className="bg-lime px-7 py-[13px] font-mono text-[10px] font-bold uppercase tracking-wide text-bg"
           >
             See my work
           </Link>
           <Link
             href="/Toni-Adekola-CV.pdf"
+            data-cursor-label="Download"
             className="border border-[rgba(255,255,255,0.18)] px-7 py-[13px] font-mono text-[10px] font-bold uppercase tracking-wide text-[rgba(232,232,226,0.25)]"
           >
             Download CV
@@ -481,10 +511,12 @@ function Ticker() {
 function ProjectCard({ project }: { project: (typeof projects)[number] }) {
   const flipped = Boolean(project.flipped);
   return (
-    <article
+    <Link
+      href={project.link.href}
       className={`project-card group relative grid overflow-hidden border border-[rgba(255,255,255,0.07)] transition-colors duration-300 hover:border-[rgba(255,255,255,0.2)] md:grid-cols-2 ${
         flipped ? "md:[direction:rtl]" : ""
       }`}
+      {...externalProps(`${project.name} ${project.link.label}`)}
     >
       <div
         className={`relative flex min-h-40 items-center justify-center bg-[#0f0f0f] p-8 md:min-h-[180px] ${
@@ -493,7 +525,7 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
       >
         <CornerBrackets color="rgba(200,241,53,0.18)" size={14} />
         <motion.div
-          className="w-[82%] overflow-hidden border border-[rgba(255,255,255,0.12)] bg-[#1a1a1a]"
+          className="w-[92%] overflow-hidden border border-[rgba(255,255,255,0.12)] bg-[#1a1a1a] shadow-[0_18px_50px_rgba(0,0,0,0.28)]"
           whileHover={{ scale: 1.03 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
@@ -502,10 +534,14 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
             <span className="h-[5px] w-[5px] rounded-full bg-[rgba(232,232,226,0.18)]" />
             <span className="h-[5px] w-[5px] rounded-full bg-[rgba(232,232,226,0.12)]" />
           </div>
-          <div className="flex h-[100px] items-center justify-center">
-            <span className="font-syne text-3xl font-extrabold uppercase tracking-[-1px] text-[rgba(232,232,226,0.1)]">
-              {project.name}
-            </span>
+          <div className="relative aspect-[1440/1100] overflow-hidden bg-[#050505]">
+            <Image
+              src={project.image}
+              alt={`${project.name} landing page screenshot`}
+              fill
+              sizes="(max-width: 768px) 80vw, 38vw"
+              className="object-contain opacity-95 transition-transform duration-500 group-hover:scale-[1.015]"
+            />
           </div>
         </motion.div>
       </div>
@@ -536,17 +572,13 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
               </span>
             ))}
           </div>
-          <Link
-            href={project.link.href}
-            className="mt-5 inline-block translate-x-[-6px] font-mono text-[10px] uppercase text-lime opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
-            {...externalProps(`${project.name} ${project.link.label}`)}
-          >
+          <span className="mt-5 inline-block translate-x-[-6px] font-mono text-[10px] uppercase text-lime opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100">
             {project.link.label}
             <span className="sr-only">(opens in new tab)</span>
-          </Link>
+          </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 
@@ -608,56 +640,160 @@ function HowIWork() {
 
 function LuffySVG() {
   const ref = useRef(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const inView = useInView(ref, { amount: 0.3, once: true });
+  const playGearFive = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.currentTime = 0;
+    void audio.play().catch(() => undefined);
+  };
+  const stopGearFive = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.pause();
+    audio.currentTime = 0;
+  };
 
   return (
-    <div ref={ref} className="relative mx-auto h-[220px] w-[220px] md:h-[280px] md:w-[280px]">
+    <div
+      ref={ref}
+      className="relative mx-auto h-[220px] w-[220px] md:h-[280px] md:w-[280px]"
+      role="img"
+      aria-label="Gear 5 Luffy silhouette. Hover or focus to play the Gear 5 audio."
+      tabIndex={0}
+      onMouseEnter={playGearFive}
+      onMouseLeave={stopGearFive}
+      onFocus={playGearFive}
+      onBlur={stopGearFive}
+    >
       <CornerBrackets />
+      <audio ref={audioRef} src="/assets/gear_5.mp3" preload="none" />
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="1000 1500 8000 7500"
+        viewBox="0 0 10000 10000"
         width="100%"
         height="100%"
-        role="img"
-        aria-label="Gear 5 Luffy silhouette"
+        className="p-3 md:p-4"
+        aria-hidden="true"
       >
         <defs>
-          <clipPath id="luffyReveal">
+          <clipPath id="luffyFillOne">
             <motion.rect
               x="0"
               y="0"
               width="10000"
-              initial={{ height: 0 }}
-              animate={inView ? { height: 10000 } : { height: 0 }}
-              transition={{ duration: 1.4, delay: 0.5, ease: [0.4, 0, 0.2, 1] }}
+              height="3300"
+              initial={{ width: 0 }}
+              animate={inView ? { width: 10000 } : { width: 0 }}
+              transition={{ duration: 0.75, delay: 1.45, ease: [0.4, 0, 0.2, 1] }}
+            />
+          </clipPath>
+          <clipPath id="luffyFillTwo">
+            <motion.rect
+              x="0"
+              y="3300"
+              width="10000"
+              height="3400"
+              initial={{ width: 0 }}
+              animate={inView ? { width: 10000 } : { width: 0 }}
+              transition={{ duration: 0.8, delay: 1.85, ease: [0.4, 0, 0.2, 1] }}
+            />
+          </clipPath>
+          <clipPath id="luffyFillThree">
+            <motion.rect
+              x="0"
+              y="6700"
+              width="10000"
+              height="3300"
+              initial={{ width: 0 }}
+              animate={inView ? { width: 10000 } : { width: 0 }}
+              transition={{ duration: 0.75, delay: 2.25, ease: [0.4, 0, 0.2, 1] }}
             />
           </clipPath>
         </defs>
         <motion.circle
           cx="5000"
           cy="5000"
-          r="4500"
+          r="4300"
           fill="rgba(200,241,53,0.04)"
           stroke="rgba(200,241,53,0.12)"
           strokeWidth="25"
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          pathLength="1"
+          initial={{ opacity: 0, pathLength: 0 }}
+          animate={inView ? { opacity: 1, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
+          transition={{ pathLength: { duration: 0.9, delay: 0.15, ease: "easeInOut" }, opacity: { duration: 0.2, delay: 0.15 } }}
         />
         <motion.circle
           cx="5000"
           cy="5000"
-          r="4400"
+          r="4180"
           fill="none"
           stroke="rgba(200,241,53,0.07)"
           strokeWidth="60"
           strokeDasharray="180 90"
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.6, delay: 0.45 }}
+          pathLength="1"
+          initial={{ opacity: 0, pathLength: 0, rotate: -90 }}
+          animate={inView ? { opacity: 1, pathLength: 1, rotate: 0 } : { opacity: 0, pathLength: 0, rotate: -90 }}
+          transition={{ pathLength: { duration: 1.05, delay: 0.55, ease: "easeInOut" }, rotate: { duration: 1.05, delay: 0.55, ease: "easeInOut" }, opacity: { duration: 0.2, delay: 0.55 } }}
+          style={{ transformOrigin: "50% 50%" }}
         />
-        <g transform="translate(0,10000) scale(1,-1)" clipPath="url(#luffyReveal)">
-          <path d={luffyPath} fill="#c8f135" fillRule="evenodd" />
+        <g transform="translate(0,10000) scale(1,-1)">
+          {[0, 1, 2].map((index) => (
+            <motion.path
+              key={`luffy-stroke-${index}`}
+              d={luffyPath}
+              fill="transparent"
+              stroke="#c8f135"
+              strokeWidth="42"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={{ opacity: 0, pathLength: 0 }}
+              animate={inView ? { opacity: 0.85, pathLength: 1 } : { opacity: 0, pathLength: 0 }}
+              transition={{
+                pathLength: { duration: 0.9, delay: 0.95 + index * 0.24, ease: "easeInOut" },
+                opacity: { duration: 0.2, delay: 0.95 + index * 0.24 },
+              }}
+              style={{
+                clipPath:
+                  index === 0
+                    ? "inset(0 0 66% 0)"
+                    : index === 1
+                      ? "inset(33% 0 33% 0)"
+                      : "inset(66% 0 0 0)",
+              }}
+            />
+          ))}
+          <g clipPath="url(#luffyFillOne)">
+            <motion.path
+              d={luffyPath}
+              fill="#c8f135"
+              fillRule="evenodd"
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ duration: 0.3, delay: 1.45 }}
+            />
+          </g>
+          <g clipPath="url(#luffyFillTwo)">
+            <motion.path
+              d={luffyPath}
+              fill="#c8f135"
+              fillRule="evenodd"
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ duration: 0.3, delay: 1.85 }}
+            />
+          </g>
+          <g clipPath="url(#luffyFillThree)">
+            <motion.path
+              d={luffyPath}
+              fill="#c8f135"
+              fillRule="evenodd"
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ duration: 0.3, delay: 2.25 }}
+            />
+          </g>
         </g>
       </svg>
       <p className="mt-5 text-center font-mono text-[9px] uppercase leading-relaxed tracking-[0.12em] text-[rgba(232,232,226,0.2)]">
@@ -757,7 +893,23 @@ function Contact() {
       transition={{ duration: 0.3 }}
       onAnimationComplete={() => setFlash(false)}
     >
-      <div className="contact-wrap mx-auto grid max-w-6xl gap-10 border-y border-[rgba(255,255,255,0.07)] py-14 md:grid-cols-[1.1fr_0.9fr]">
+      <div className="contact-wrap relative mx-auto grid max-w-6xl gap-10 overflow-hidden border-y border-[rgba(255,255,255,0.07)] py-14 md:grid-cols-[1.1fr_0.9fr]">
+        <motion.img
+          src="/assets/ace-tattoo.svg"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-2 top-1/2 hidden h-[360px] w-auto -translate-y-1/2 opacity-[0.07] invert md:block"
+          animate={{
+            y: ["-50%", "-53%", "-50%"],
+            opacity: [0.05, 0.11, 0.05],
+            filter: [
+              "invert(1) drop-shadow(0 0 0 rgba(200,241,53,0))",
+              "invert(1) drop-shadow(0 0 18px rgba(200,241,53,0.18))",
+              "invert(1) drop-shadow(0 0 0 rgba(200,241,53,0))",
+            ],
+          }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        />
         <div>
           <div className="contact-head font-extrabold uppercase">
             <span className="block text-ink">LET&apos;S</span>
@@ -795,13 +947,12 @@ function Contact() {
         <div className="flex flex-col justify-center gap-5">
           <div className="inline-flex w-max items-center gap-3 border border-[rgba(255,255,255,0.07)] px-4 py-3">
             <motion.img
-              src="/assets/heart-pirates-logo.png"
+              src="/assets/trafalgar-law-logo.svg"
               alt=""
               aria-hidden="true"
-              width={18}
-              height={18}
-              className="opacity-60"
-              style={{ filter: "grayscale(1) invert(1)" }}
+              width={24}
+              height={24}
+              className="border border-[rgba(200,241,53,0.25)] bg-lime/10"
               animate={{ rotate: 360 }}
               transition={{ duration: 7.5, ease: "linear", repeat: Infinity }}
             />
@@ -850,7 +1001,7 @@ export default function PortfolioRedesign({ posts }: { posts: Post[] }) {
     <>
       <MagneticCursor />
       <Navbar />
-      <main id="main-content" className="relative z-10">
+      <main id="main-content" className="relative z-10 pt-[68px] md:pt-[76px]">
         <Hero />
         <StatsRow />
         <Ticker />
