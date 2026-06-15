@@ -21,8 +21,14 @@ const config = {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        syne: ["var(--font-syne)", "sans-serif"],
+        mono: ["var(--font-mono)", "Space Mono", "monospace"],
       },
       colors: {
+        bg: "#0c0c0c",
+        surface: "#111111",
+        lime: "#c8f135",
+        ink: "#e8e8e2",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -56,6 +62,11 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+      },
+      letterSpacing: {
+        wide: "0.12em",
+        wider: "0.18em",
+        widest: "0.22em",
       },
       borderRadius: {
         lg: "var(--radius)",
